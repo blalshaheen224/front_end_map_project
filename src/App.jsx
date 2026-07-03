@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/layout/Layout';
+import ScrollToTop from './components/ScrollToTop'; // ✅ أضف هذا
 import AdminLayout from './components/layout/AdminLayout';
 import Unauthorized from './pages/Unauthorized';
 
@@ -23,6 +24,7 @@ import EditProperty from './pages/admin/EditProperty';
 function App() {
   return (
     <BrowserRouter>
+    <ScrollToTop /> 
       <AuthProvider>
         <Routes>
           {/* Public Routes with Public Layout */}
