@@ -1,0 +1,104 @@
+/* src/index.css */
+
+/* ✅ Leaflet CSS - يجب أن يكون في الأعلى */
+
+
+@import 'leaflet/dist/leaflet.css';
+
+/* ✅ Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+@layer base {
+  body {
+    @apply font-sans antialiased;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-colors duration-200;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+  }
+  
+  .input {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6;
+  }
+}
+
+/* Leaflet marker fix */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* أضف هذا في src/index.css */
+
+/* Leaflet Popup Custom Styles */
+.property-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.property-popup .leaflet-popup-content {
+  margin: 0;
+  padding: 12px;
+  width: auto !important;
+}
+
+.property-popup .leaflet-popup-tip-container {
+  display: none;
+}
+
+/* Ensure map takes full height */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* أضف هذا في src/index.css */
+
+/* Ensure map takes full height */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Remove default body margin */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Leaflet Popup Custom Styles */
+.property-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.property-popup .leaflet-popup-content {
+  margin: 0;
+  padding: 12px;
+  width: auto !important;
+}
+
+.property-popup .leaflet-popup-tip-container {
+  display: none;
+}
