@@ -1,10 +1,10 @@
 // src/pages/admin/Dashboard.jsx
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, TrendingUp, DollarSign, Star, Eye } from 'lucide-react';
+import { Building2, TrendingUp, DollarSign, Star, Eye, Plus } from 'lucide-react';
 import { propertyService } from '../../services/propertyService';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
-import { CITIES_AR, PROPERTY_TYPES_AR, PROPERTY_PURPOSE_AR } from '../../constants/propertyConstants';
+import { CITIES_AR, PROPERTY_TYPES_AR } from '../../constants/propertyConstants';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ total: 0, featured: 0, sale: 0, rent: 0 });
@@ -28,7 +28,6 @@ const Dashboard = () => {
         rent: properties.filter(p => p.purpose === 'rent').length,
       });
 
-      // Get latest 5
       setRecentProperties(properties.slice(0, 5));
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
@@ -40,95 +39,103 @@ const Dashboard = () => {
   if (loading) return <LoadingSpinner size="lg" />;
 
   const statCards = [
-    { label: 'إجمالي العقارات', value: stats.total, icon: Building2, color: 'bg-blue-500' },
-    { label: 'عقارات مميزة', value: stats.featured, icon: Star, color: 'bg-yellow-500' },
-    { label: 'للبيع', value: stats.sale, icon: DollarSign, color: 'bg-green-500' },
-    { label: 'للإيجار', value: stats.rent, icon: TrendingUp, color: 'bg-purple-500' },
+    { label: 'إجمالي العقارات', value: stats.total, icon: Building2, color: 'from-blue-500 to-blue-600' },
+    { label: 'عقارات مميزة', value: stats.featured, icon: Star, color: 'from-yellow-500 to-yellow-600' },
+    { label: 'للبيع', value: stats.sale, icon: DollarSign, color: 'from-green-500 to-green-600' },
+    { label: 'للإيجار', value: stats.rent, icon: TrendingUp, color: 'from-purple-500 to-purple-600' },
   ];
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">نظرة عامة</h1>
+    <div className="space-y-6 animate-fade-in">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-3xl font-bold text-gray-900">نظرة عامة</h1>
+        <Link
+          to="/admin/properties/new"
+          className="btn btn-primary"
+        >
+          <Plus className="h-5 w-5" />
+          إضافة عقار
+        </Link>
+      </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((stat, index) => (
-          <div key={index} className="bg-white rounded-xl shadow-sm p-6 flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 text-sm mb-1">{stat.label}</p>
-              <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-            </div>
-            <div className={`${stat.color} p-3 rounded-lg text-white`}>
-              <stat.icon className="h-6 w-6" />
+          <div 
+            key={index} 
+            className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in-up"
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 text-sm mb-1">{stat.label}</p>
+                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+              </div>
+              <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg`}>
+                <stat.icon className="h-6 w-6" />
+              </div>
             </div>
           </div>
         ))}
       </div>
 
       {/* Recent Properties */}
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-900">أحدث العقارات المضافة</h2>
-          <Link to="/admin/properties" className="text-primary-600 hover:text-primary-700 text-sm font-semibold">
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-900">أحدث العقارات</h2>
+          <Link to="/admin/properties" className="text-primary-600 hover:text-primary-700 text-sm font-semibold flex items-center gap-1">
             عرض الكل
+            <Eye className="h-4 w-4" />
           </Link>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50 border-b border-gray-100">
               <tr className="text-right text-gray-600 text-sm">
                 <th className="py-4 px-6">العنوان</th>
+                <th className="py-4 px-6 hidden sm:table-cell">الموقع</th>
                 <th className="py-4 px-6">السعر</th>
-                <th className="py-4 px-6">النوع</th>
+                <th className="py-4 px-6 hidden md:table-cell">النوع</th>
                 <th className="py-4 px-6">الحالة</th>
-                <th className="py-4 px-6">التاريخ</th>
-                <th className="py-4 px-6 text-center">إجراء</th>
               </tr>
             </thead>
             <tbody>
-              {recentProperties.map((property) => (
-                <tr key={property._id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+              {recentProperties.map((property, index) => (
+                <tr 
+                  key={property._id} 
+                  className="border-b border-gray-50 hover:bg-gray-50 transition-colors animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
                   <td className="py-4 px-6">
                     <p className="font-semibold text-gray-900 line-clamp-1">{property.title}</p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 mt-1 sm:hidden">
                       {CITIES_AR[property.city] || property.city}
-                      {property.district && ` - ${property.district}`}
                     </p>
+                  </td>
+                  <td className="py-4 px-6 text-sm text-gray-600 hidden sm:table-cell">
+                    {CITIES_AR[property.city] || property.city}
                   </td>
                   <td className="py-4 px-6 font-semibold text-primary-600">
                     {property.price.toLocaleString()} ج.م
                   </td>
-                  <td className="py-4 px-6 text-sm text-gray-600">
+                  <td className="py-4 px-6 text-sm text-gray-600 hidden md:table-cell">
                     {PROPERTY_TYPES_AR[property.type] || property.type}
                   </td>
                   <td className="py-4 px-6">
-                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      property.status === 'active' ? 'bg-green-100 text-green-700' :
-                      property.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                    <span className={`badge ${
+                      property.status === 'active' ? 'badge-success' :
+                      property.status === 'pending' ? 'badge-warning' :
                       'bg-gray-100 text-gray-700'
                     }`}>
                       {property.status}
                     </span>
                   </td>
-                  <td className="py-4 px-6 text-gray-500 text-sm">
-                    {new Date(property.createdAt).toLocaleDateString('ar-EG')}
-                  </td>
-                  <td className="py-4 px-6 text-center">
-                    <Link
-                      to={`/properties/${property._id}`}
-                      target="_blank"
-                      className="inline-flex items-center gap-1 px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm"
-                    >
-                      <Eye className="h-4 w-4" />
-                      عرض
-                    </Link>
-                  </td>
                 </tr>
               ))}
               {recentProperties.length === 0 && (
                 <tr>
-                  <td colSpan="6" className="py-12 text-center text-gray-500">
+                  <td colSpan="5" className="py-12 text-center text-gray-500">
                     لا توجد عقارات حتى الآن
                   </td>
                 </tr>

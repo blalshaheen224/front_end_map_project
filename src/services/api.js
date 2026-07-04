@@ -1,6 +1,7 @@
 // src/services/api.js
 import axios from 'axios';
-
+ //http://localhost:5000
+ //"https://back-end-map-project.onrender.com/"
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ||"https://back-end-map-project.onrender.com/"
 console.log(import.meta.env.VITE_API_BASE_URL);
 // Create axios instance
